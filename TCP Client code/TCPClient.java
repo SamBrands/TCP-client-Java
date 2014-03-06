@@ -21,14 +21,17 @@ public class TCPClient {
 	private Thread ListenThread;
 	private boolean Listen;
 	
+	private int _bufferSize; 
+	
 	public TCPClient()
 	{
 		DataReceived = new ArrayList<DataReceivedHandler>(); 
 		Listen = true;
 	}
 	
-	public void Connect(InetAddress address, int port) throws IOException, Exception
+	public void Connect(InetAddress address, int port, int bufferSize) throws IOException, Exception
 	{
+		_bufferSize = bufferSize;
 		_clientSocket = new Socket(address, port);
 		
 		_serverInput = new BufferedReader(new InputStreamReader(_clientSocket.getInputStream()));
@@ -56,9 +59,9 @@ public class TCPClient {
 		_serverWriter.write(data);	
 	}
 	
-    private void Listen(int bufferSize)
+    private void Listen()
     {
-		char[] buffer = new char[bufferSize];
+		char[] buffer = new char[_bufferSize];
 		
 		while(Listen)
 		{
